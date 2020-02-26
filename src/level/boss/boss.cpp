@@ -97,11 +97,11 @@ void Boss::update()
         case 0:
         {
           // Movement
-          if (ticks % TARGET_FPS * 3 == 0)
+          if (ticks % (TARGET_FPS * 3) == 0)
             dir = rand() % 2;
 
           // Rockets
-          if (ticks % TARGET_FPS * 4 == 0)
+          if (ticks % (TARGET_FPS * 4) == 0)
             objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w / 2, destRect.y, 1));
 
           if (dir)
@@ -117,15 +117,15 @@ void Boss::update()
         case 1:
         {
           // Movement
-          if (ticks % TARGET_FPS * 3 == 0)
+          if (ticks % (TARGET_FPS * 3) == 0)
             dir = rand() % 2;
 
           // Rockets
-          if (ticks % TARGET_FPS * 4 == 0)
+          if (ticks % (TARGET_FPS * 4) == 0)
             objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y, 1));
 
           // Rockets
-          if (ticks % TARGET_FPS * 8 == 0)
+          if (ticks % (TARGET_FPS * 8) == 0)
             objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w, destRect.y, 1));
 
           if (dir)
@@ -141,7 +141,7 @@ void Boss::update()
         case 2:
         {
           // Movement
-          if (ticks % TARGET_FPS * 3 == 0)
+          if (ticks % (TARGET_FPS * 3) == 0)
             dir = rand() % 2;
 
           // Rockets
@@ -167,11 +167,11 @@ void Boss::update()
         case 3:
         {
           // Movement
-          if (ticks % TARGET_FPS * 3 == 0)
+          if (ticks % (TARGET_FPS * 3) == 0)
             dir = rand() % 2;
 
           // Rockets
-          if (ticks % TARGET_FPS * 16 == 0)
+          if (ticks % (TARGET_FPS * 4) == 0)
             for (int i = 0; i < destRect.w / 32; i++)
               objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + i * 32, destRect.y - i * 32, 1));
 
@@ -188,11 +188,11 @@ void Boss::update()
         case 4:
         {
           // Movement
-          if (ticks % TARGET_FPS * 3 == 0)
+          if (ticks % (TARGET_FPS * 3) == 0)
             dir = rand() % 2;
 
           // Rockets
-          if (ticks % TARGET_FPS * 4 == 0)
+          if (ticks % (TARGET_FPS * 4 )== 0)
           {
             objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y, 1));
             objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w, destRect.y, 1));

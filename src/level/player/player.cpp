@@ -51,6 +51,25 @@ void Player::update()
       shouldJump = false;
     }
 
+    // Flip
+    if (Game::inputs.special)
+    {
+      flipping = true;
+      boosting = false;
+      boostTicks = 0;
+    }
+
+    if (flipping == true)
+    {
+      flipTicks++;
+      if (flipTicks > TARGET_FPS)
+        flipping = false;
+    }
+    else
+    {
+      flipTicks = 0;
+    }
+
     // Check if can boost
     if (Game::inputs.attack && canBoost)
     {
@@ -215,7 +234,13 @@ void Player::draw()
     else
       srcRect = {0, 32, 64, 64};
   SDL_Rect dRect = {destRect.x, (destRect.y + maxYVel / 5) - Game::camera.y, destRect.w, destRect.h};
-  renderer->copy(Game::getTexture()->getTexture(), &srcRect, &dRect);
+
+  if (flipping)
+  {
+    renderer->copy(Game::getTexture()->getTexture(), &srcRect, &dRect, 360 / TARGET_FPS * flipTicks);
+  }
+  else
+    renderer->copy(Game::getTexture()->getTexture(), &srcRect, &dRect);
 
   // Draw health
   SDL_Rect healthBar = {16, 32, (int) ((WINDOW_WIDTH / 4) * (health / 20.0)), 16};

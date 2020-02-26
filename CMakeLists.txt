@@ -19,6 +19,8 @@ add_executable(tsa
   src/level/cutscene/dialog.cpp
   src/level/enemies/enemy_manager.cpp
   src/level/enemies/enemy.cpp
+  src/level/particles/particle_manager.cpp
+  src/level/particles/particle.cpp
   src/level/player/player_manager.cpp
   src/level/player/player.cpp
   src/level/trampoline/trampoline_manager.cpp
@@ -55,6 +57,7 @@ target_include_directories(tsa PUBLIC
   src/level/boss
   src/level/cutscene
   src/level/enemies
+  src/level/particles
   src/level/player
   src/level/trampoline
   src/menu

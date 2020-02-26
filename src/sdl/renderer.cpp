@@ -39,6 +39,11 @@ void Renderer::copy(SDL_Texture* texture, SDL_Rect* srcRect, SDL_Rect* destRect)
   SDL_RenderCopy(renderer, texture, srcRect, destRect);
 }
 
+void Renderer::copy(SDL_Texture* texture, SDL_Rect* srcRect, SDL_Rect* destRect, double angle)
+{
+  SDL_RenderCopyEx(renderer, texture, srcRect, destRect, angle, NULL, SDL_FLIP_NONE);
+}
+
 SDL_Renderer* Renderer::getRenderer()
 {
   return renderer;

@@ -9,7 +9,7 @@ Renderer* Game::renderer;
 Texture* Game::texture;
 ManagerManager* Game::manager;
 Camera Game::camera = {0, 0};
-LevelInfo Game::levelInfo = {0, 0, 1, 5, false, false};
+LevelInfo Game::levelInfo = {0, 0, 1, 2, false, false};
 int Game::scores[5] = {0, 0, 0, 0, 0};
 int Game::times[5] = {999, 999, 999, 999, 999};
 

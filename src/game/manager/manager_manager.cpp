@@ -9,6 +9,7 @@
 #include "cutscene_manager.h"
 #include "boss_manager.h"
 #include "label_manager.h"
+#include "particle_manager.h"
 
 /*
  * It updates in the order here,
@@ -21,6 +22,9 @@ ManagerManager::ManagerManager(Renderer* renderer)
 
   CutSceneManager* cutSceneM = new CutSceneManager(renderer);
   objects.push_back(cutSceneM);
+
+  ParticleManager* particleM = new ParticleManager(renderer);
+  objects.push_back(particleM);
 
   LabelManager* labelM = new LabelManager(renderer);
   objects.push_back(labelM);

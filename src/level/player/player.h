@@ -26,6 +26,7 @@ private:
   SDL_Rect delta;
   std::deque<SDL_Rect> deltas;
   float yVel, xVel;
+  // TODO: Clean up this code
   bool jumping, canJump, shouldJump;
   int defMinMaxYVel, defMaxMaxYVel;
   int maxYVel, maxXVel;
@@ -33,6 +34,8 @@ private:
   bool boosting, canBoost;
   int boostTicks, boostDir;
   int health;
+  bool flipping;
+  int flipTicks;
 };
 
 #endif
