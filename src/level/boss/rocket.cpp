@@ -26,6 +26,7 @@ Rocket::Rocket(Renderer* ren, Player* p, int x, int y, int dir) : GameItem(ren)
     case 2:
       srcRect = {192, 0, 64, 32};
       destRect = {x, y, 64, 32};
+      break;
     case 3:
       srcRect = {256, 0, 64, 32};
       destRect = {x, y, 64, 32};
@@ -68,15 +69,19 @@ void Rocket::update()
     case 0:
       if (-yVel < maxVel)
         yVel--;
+      break;
     case 1:
       if (yVel < maxVel)
         yVel++;
+      break;
     case 2:
       if (-xVel < maxVel)
         xVel--;
+      break;
     case 3:
       if (xVel < maxVel)
         xVel++;
+      break;
   }
   destRect.x += xVel;
   destRect.y += yVel;

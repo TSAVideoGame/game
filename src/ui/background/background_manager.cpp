@@ -11,6 +11,7 @@ BackgroundManager::BackgroundManager(Renderer* ren) : ItemManager(ren)
   mix->addTrack("res/music/title.wav");
   mix->addTrack("res/music/mysterious_shores.wav");
   mix->addTrack("res/music/run.wav");
+  mix->addTrack("res/music/ice.wav");
   mix->addTrack("res/music/death.wav");
 }
 
@@ -49,27 +50,27 @@ void BackgroundManager::update()
       }
       case GameState::LEVEL:
       {
-        if (Game::levelInfo.level == 4)
-          mix->play(0);
-        else
-          mix->play(3);
-        Background* b;
         switch (Game::levelInfo.level)
         {
           case 4:
+            mix->play(0);
             objects.push_back(new Background(renderer, "res/images/levels/volcano.jpeg", {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT}, 0));
             break;
           case 3:
+            mix->play(3);
             objects.push_back(new Background(renderer, "res/images/levels/space.png", {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT}, 0));
             break;
           case 2:
+            mix->play(4);
             objects.push_back(new Background(renderer, "res/images/levels/ice.png", {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT}, 0));
             break;
           case 1:
+            mix->play(3);
             objects.push_back(new Background(renderer, "res/images/levels/water.png", {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT}, 0));
             break;
           default:
           case 0:
+            mix->play(3);
             objects.push_back(new Background(renderer, "res/images/levels/grass.png", {0, 0, WINDOW_WIDTH, WINDOW_HEIGHT}, 0));
             break;
         }
@@ -77,7 +78,7 @@ void BackgroundManager::update()
       }
       case GameState::OVER:
       {
-        mix->play(4);
+        mix->play(5);
       }
     }
   }
