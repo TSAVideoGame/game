@@ -40,8 +40,9 @@ public:
   static int selectedLevel;
   static Camera camera;
   static LevelInfo levelInfo;
-  static int scores[5];
-  static int times[5]; // Time it takes to beat level in ticks
+  static int levelsUnlocked[6];
+  static int scores[6];
+  static int times[6]; // Time it takes to beat level in ticks
 private:
   Game();
   ~Game();

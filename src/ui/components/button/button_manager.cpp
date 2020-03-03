@@ -21,7 +21,8 @@ static void menu(Button* button)
 
 static void startLevel(Button* button)
 {
-  GameStates::changeState(GameState::LEVEL);
+  if (Game::levelsUnlocked[Game::levelInfo.level])
+    GameStates::changeState(GameState::LEVEL);
 }
 
 ButtonManager::ButtonManager(Renderer* ren) : ItemManager(ren)

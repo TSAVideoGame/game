@@ -12,6 +12,8 @@ public:
   ~LevelSelectManager();
   void update();
   void switchSelected(LevelTile*);
+private:
+  void saveGame();
 };
 
 #endif

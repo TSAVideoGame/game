@@ -10,8 +10,9 @@ Texture* Game::texture;
 ManagerManager* Game::manager;
 Camera Game::camera = {0, 0};
 LevelInfo Game::levelInfo = {0, 0, 1, 2, false, false};
-int Game::scores[5] = {0, 0, 0, 0, 0};
-int Game::times[5] = {999, 999, 999, 999, 999};
+int Game::levelsUnlocked[6] = {1, 0, 0, 0, 0, 0};
+int Game::scores[6] = {0, 0, 0, 0, 0, 0};
+int Game::times[6] = {999, 999, 999, 999, 999, 999};
 
 void Game::init(const char* title, int x, int y, int width, int height, bool fullScreen)
 {

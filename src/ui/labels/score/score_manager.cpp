@@ -36,6 +36,19 @@ void ScoreManager::update()
     }
     case GameState::WIN:
     {
+      Game::scores[Game::levelInfo.level] = 1;
+
+      if (Game::levelInfo.level == 0)
+      {
+        for (int i = 1; i < 5; i++)
+          Game::levelsUnlocked[i] = 1;
+      }
+
+      if (Game::scores[0] > 0 && Game::scores[1] > 0 && Game::scores[2] > 0 && Game::scores[3] > 0 && Game::scores[4] > 0)
+      {
+        Game::levelsUnlocked[5] = 1;
+      }
+
       if (Game::levelInfo.time < Game::times[Game::levelInfo.level])
         Game::times[Game::levelInfo.level] = Game::levelInfo.time;
 
