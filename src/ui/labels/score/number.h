@@ -8,14 +8,15 @@
 class Number : public GameItem
 {
 public:
-  Number(Renderer*, Texture*, int x, int y, int pos);
+  Number(Renderer*, int* score, int x, int y, int w, int pos);
   ~Number();
   void update();
-  void draw();
+  void goTo(int x, int y);
 private:
+  int* score;
+  int width;
   void setSrc();
   int position;
-  Texture* texture;
 };
 
 #endif

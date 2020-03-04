@@ -17,9 +17,6 @@ public:
   ScoreManager(Renderer*);
   ~ScoreManager();
   void update();
-private:
-  Texture* texture;
-  void addDigits(int num, int x, int y, int width);
 };
 
 #endif

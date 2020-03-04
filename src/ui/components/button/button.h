@@ -17,6 +17,8 @@ public:
   void click();
   bool selected;
   SDL_Rect getPos() {return myPos;}
+  void setSrc(SDL_Rect sRect) {srcRect = sRect;}
+  void goTo(int x, int y);
 private:
   void (*onClick)(Button*);
   SDL_Rect myPos;

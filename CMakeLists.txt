@@ -45,6 +45,7 @@ add_executable(tsa
   src/ui/labels/label.cpp
   src/ui/labels/score/number.cpp
   src/ui/labels/score/score_manager.cpp
+  src/ui/labels/score/score.cpp
   src/ui/slide/slide_manager.cpp
   src/ui/slide/slide.cpp
 )

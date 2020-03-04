@@ -54,9 +54,10 @@ void ButtonManager::update()
       }
       case GameState::MENU:
       {
-        Button* button;
-        button = new Button(renderer, {0, 0, 64, 32}, {WINDOW_WIDTH / 2 - (buttonW / 2), (WINDOW_HEIGHT) - buttonH * 3, buttonW, buttonH}, startLevel);
-        objects.push_back(button);
+        for (int i = 0; i < 6; i++)
+        {
+          objects.push_back(new Button(renderer, {0, 0, 64, 32}, {(WINDOW_WIDTH / 2 - 64) + (i * 512) - (Game::levelInfo.level * 512), WINDOW_HEIGHT + 8, buttonW, buttonH}, startLevel));
+        }
         break;
       }
       case GameState::OVER:
@@ -76,11 +77,20 @@ void ButtonManager::update()
     }
   }
 
-  switch (GameStates::getState())
+  if (GameStates::getState() == GameState::MENU)
   {
-    case GameState::HOME:
+    for (int i = 0; i < objects.size(); i++)
     {
-
+      if (i == Game::levelInfo.level)
+      {
+        dynamic_cast<Button*>(objects[i])->goTo((WINDOW_WIDTH / 2 - 64) + (i * 512) - (Game::levelInfo.level * 512), (WINDOW_HEIGHT) - buttonH *  3);
+        if (Game::levelsUnlocked[i])
+          dynamic_cast<Button*>(objects[i])->setSrc({0, 0, 64, 32});
+        else
+          dynamic_cast<Button*>(objects[i])->setSrc({64, 0, 64, 32});
+      }
+      else
+        dynamic_cast<Button*>(objects[i])->goTo((WINDOW_WIDTH / 2 - 64) + (i * 512) - (Game::levelInfo.level * 512), WINDOW_HEIGHT + 8);
     }
   }
 

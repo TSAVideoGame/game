@@ -57,3 +57,10 @@ void Button::click()
 {
   onClick(this);
 }
+
+void Button::goTo(int x, int y)
+{
+  myPos.x += (x - myPos.x) / 4;
+  myPos.y += (y - myPos.y) / 4;
+  destRect = myPos;
+}
