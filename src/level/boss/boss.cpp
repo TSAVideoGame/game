@@ -16,27 +16,27 @@ Boss::Boss(Renderer* ren, Player* p) : GameItem(ren), ItemManager(ren)
   {
     case 0:
     {
-      srcRect = {0, 167, 512, 256};
+      srcRect = {0, 231, 512, 256};
       break;
     }
     case 1:
     {
-      srcRect = {0, 167, 512, 256};
+      srcRect = {0, 231, 512, 256};
       break;
     }
     case 2:
     {
-      srcRect = {0, 167, 512, 256};
+      srcRect = {0, 231, 512, 256};
       break;
     }
     case 3:
     {
-      srcRect = {0, 167, 512, 256};
+      srcRect = {0, 231, 512, 256};
       break;
     }
     case 4:
     {
-      srcRect = {0, 167, 512, 256};
+      srcRect = {0, 231, 512, 256};
       break;
     }
   }
@@ -51,7 +51,7 @@ void Boss::update()
 {
   if (GameStates::getState() == GameState::LEVEL)
   {
-    if (Game::levelInfo.cutSceneOver)
+    if (Game::levelInfo.cutSceneOver && !Game::levelInfo.paused)
     {
       ticks++;
 

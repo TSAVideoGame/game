@@ -25,6 +25,11 @@ static void startLevel(Button* button)
     GameStates::changeState(GameState::LEVEL);
 }
 
+static void pauseLevel(Button* button)
+{
+  Game::levelInfo.paused = !Game::levelInfo.paused;
+}
+
 ButtonManager::ButtonManager(Renderer* ren) : ItemManager(ren)
 {
 
@@ -60,6 +65,12 @@ void ButtonManager::update()
         }
         break;
       }
+      case GameState::LEVEL:
+      {
+        Game::levelInfo.paused = false;
+        objects.push_back(new Button(renderer, {416, 128, 32, 32}, {WINDOW_WIDTH - 48, 16, 32, 32}, pauseLevel));
+        break;
+      }
       case GameState::OVER:
       {
         Button* button;
@@ -91,6 +102,19 @@ void ButtonManager::update()
       }
       else
         dynamic_cast<Button*>(objects[i])->goTo((WINDOW_WIDTH / 2 - 64) + (i * 512) - (Game::levelInfo.level * 512), WINDOW_HEIGHT + 8);
+    }
+  }
+  else if (GameStates::getState() == GameState::LEVEL)
+  {
+    if (Game::levelInfo.paused)
+    {
+      if (objects.size() < 2)
+        objects.push_back(new Button(renderer, {64, 0, 64, 32}, {(WINDOW_WIDTH / 2) - (buttonW / 2), (WINDOW_HEIGHT / 2) - (buttonH / 2) + buttonH * 2, buttonW, buttonH}, menu));
+    }
+    else
+    {
+      if (objects.size() > 1)
+        objects.pop_back();
     }
   }
 

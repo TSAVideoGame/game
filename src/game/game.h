@@ -22,6 +22,7 @@ struct LevelInfo
   bool cutScene;
   bool cutSceneOver;
   int time;
+  bool paused;
 };
 
 class Game

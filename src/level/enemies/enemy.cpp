@@ -28,34 +28,37 @@ Enemy::~Enemy()
 
 void Enemy::update()
 {
-  // Player collides with top
-  if ((player->getDelta().y + player->getDelta().h <= destRect.y && player->getPos().y + player->getPos().h >= destRect.y) &&
-      ((player->getPos().x >= destRect.x && player->getPos().x <= destRect.x + destRect.w) ||
-      (player->getPos().x + player->getPos().w >= destRect.x && player->getPos().x + player->getPos().w <= destRect.x + destRect.w)))
-    player->hit(0, destRect.y - (player->getPos().y + player->getPos().h), EnemyTypes::enemy);
+  if (!Game::levelInfo.paused)
+  {
+    // Player collides with top
+    if ((player->getDelta().y + player->getDelta().h <= destRect.y && player->getPos().y + player->getPos().h >= destRect.y) &&
+        ((player->getPos().x >= destRect.x && player->getPos().x <= destRect.x + destRect.w) ||
+        (player->getPos().x + player->getPos().w >= destRect.x && player->getPos().x + player->getPos().w <= destRect.x + destRect.w)))
+      player->hit(0, destRect.y - (player->getPos().y + player->getPos().h), EnemyTypes::enemy);
 
-  // Player collides with bottom
-  if ((player->getDelta().y >= destRect.y + destRect.h && player->getPos().y <= destRect.y + destRect.h) &&
-      ((player->getPos().x >= destRect.x && player->getPos().x <= destRect.x + destRect.w) ||
-      (player->getPos().x + player->getPos().w >= destRect.x && player->getPos().x + player->getPos().w <= destRect.x + destRect.w)))
-    player->hit(1, player->getPos().y - (destRect.y + destRect.h), EnemyTypes::enemy);
+    // Player collides with bottom
+    if ((player->getDelta().y >= destRect.y + destRect.h && player->getPos().y <= destRect.y + destRect.h) &&
+        ((player->getPos().x >= destRect.x && player->getPos().x <= destRect.x + destRect.w) ||
+        (player->getPos().x + player->getPos().w >= destRect.x && player->getPos().x + player->getPos().w <= destRect.x + destRect.w)))
+      player->hit(1, player->getPos().y - (destRect.y + destRect.h), EnemyTypes::enemy);
 
-  // Player collides with left
-  if ((player->getDelta().x + player->getDelta().w <= destRect.x && player->getPos().x + player->getPos().w >= destRect.x) &&
-      ((player->getPos().y >= destRect.y && player->getPos().y <= destRect.y + destRect.h) ||
-      (player->getPos().y + player->getPos().h >= destRect.y && player->getPos().y + player->getPos().h <= destRect.y + destRect.h)))
-    player->hit(2, (player->getPos().x + player->getPos().w) - destRect.x, EnemyTypes::enemy);
+    // Player collides with left
+    if ((player->getDelta().x + player->getDelta().w <= destRect.x && player->getPos().x + player->getPos().w >= destRect.x) &&
+        ((player->getPos().y >= destRect.y && player->getPos().y <= destRect.y + destRect.h) ||
+        (player->getPos().y + player->getPos().h >= destRect.y && player->getPos().y + player->getPos().h <= destRect.y + destRect.h)))
+      player->hit(2, (player->getPos().x + player->getPos().w) - destRect.x, EnemyTypes::enemy);
 
-  // Player collides with right
-  if ((player->getDelta().x >= destRect.x + destRect.w && player->getPos().x <= destRect.x + destRect.w) &&
-      ((player->getPos().y >= destRect.y && player->getPos().y <= destRect.y + destRect.h) ||
-      (player->getPos().y + player->getPos().h >= destRect.y && player->getPos().y + player->getPos().h <= destRect.y + destRect.h)))
-    player->hit(3, (destRect.x + destRect.w) - player->getPos().x, EnemyTypes::enemy);
+    // Player collides with right
+    if ((player->getDelta().x >= destRect.x + destRect.w && player->getPos().x <= destRect.x + destRect.w) &&
+        ((player->getPos().y >= destRect.y && player->getPos().y <= destRect.y + destRect.h) ||
+        (player->getPos().y + player->getPos().h >= destRect.y && player->getPos().y + player->getPos().h <= destRect.y + destRect.h)))
+      player->hit(3, (destRect.x + destRect.w) - player->getPos().x, EnemyTypes::enemy);
 
-  if (dir)
-    destRect.x += 2;
-  else
-    destRect.x -= 2;
+    if (dir)
+      destRect.x += 2;
+    else
+      destRect.x -= 2;
+  }
 }
 
 void Enemy::draw()

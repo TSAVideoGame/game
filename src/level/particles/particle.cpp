@@ -11,7 +11,7 @@ Particle::Particle(Renderer* ren, int x, int y) : GameItem(ren)
     case 0:
       break;
     case 1: // Water
-      srcRect = {448, 0, 16, 16};
+      srcRect = {256, 32, 16, 16};
       myPos.w = 16;
       myPos.h = 16;
       break;

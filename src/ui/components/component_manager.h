@@ -9,6 +9,8 @@ class ComponentManager : public ItemManager
 public:
   ComponentManager(Renderer* ren);
   ~ComponentManager();
+  void update();
+  void draw();
 };
 
 #endif

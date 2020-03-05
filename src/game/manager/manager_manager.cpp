@@ -20,6 +20,9 @@ ManagerManager::ManagerManager(Renderer* renderer)
 {
   objects.reserve(10);
 
+  ComponentManager* componentM = new ComponentManager(renderer);
+  objects.push_back(componentM);
+  
   CutSceneManager* cutSceneM = new CutSceneManager(renderer);
   objects.push_back(cutSceneM);
 
@@ -40,9 +43,6 @@ ManagerManager::ManagerManager(Renderer* renderer)
 
   TrampolineManager* trampolineM = new TrampolineManager(renderer, playerM->getPlayer());
   objects.push_back(trampolineM);
-
-  ComponentManager* componentM = new ComponentManager(renderer);
-  objects.push_back(componentM);
 
   MenuManager* menuM = new MenuManager(renderer);
   objects.push_back(menuM);

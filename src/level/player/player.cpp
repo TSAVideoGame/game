@@ -17,7 +17,7 @@ Player::~Player()
 
 void Player::update()
 {
-  if (GameStates::getState() == GameState::LEVEL && !Game::levelInfo.cutScene)
+  if (GameStates::getState() == GameState::LEVEL && !Game::levelInfo.cutScene && !Game::levelInfo.paused)
   {
     ticks++;
 
@@ -71,7 +71,7 @@ void Player::update()
     }
 
     // Check if can boost
-    if (Game::inputs.attack && canBoost)
+    if (Game::inputs.attack && canBoost && (Game::inputs.left || Game::inputs.right))
     {
       boosting = true;
       if (Game::inputs.left)

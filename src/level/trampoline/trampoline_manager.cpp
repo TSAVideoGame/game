@@ -46,12 +46,15 @@ void TrampolineManager::update()
     }
   }
 
-  if (GameStates::getState() == GameState::LEVEL)
+  if (GameStates::getState() == GameState::LEVEL && !Game::levelInfo.paused)
   {
-    // Increase Score
-    ticks++;
-    if (ticks % TARGET_FPS == 0 && Game::levelInfo.time < 999)
-      Game::levelInfo.time++;
+    // Increase Time
+    if (!Game::levelInfo.cutScene)
+    {
+      ticks++;
+      if (ticks % TARGET_FPS == 0 && Game::levelInfo.time < 999)
+        Game::levelInfo.time++;
+    }
 
     // Increase difficulty
     if (-Game::levelInfo.maxHeight / 2000 > Game::levelInfo.difficulty)

@@ -11,6 +11,8 @@ public:
   Label(Renderer*, SDL_Rect sRect, SDL_Rect dRect);
   ~Label();
   void update();
+  void goTo(int x, int y);
+  void setSrc(SDL_Rect srcRect);
 };
 
 #endif
