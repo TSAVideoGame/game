@@ -21,7 +21,7 @@ void ComponentManager::update()
 
 void ComponentManager::draw()
 {
-  if (GameStates::getState() == GameState::LEVEL && Game::levelInfo.paused)
+  if (Game::gameState.getState() == GameState::LEVEL && Game::levelInfo.paused)
   {
     renderer->setDrawColor(0, 0, 0, 128);
     renderer->fillRect(NULL);

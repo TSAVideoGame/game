@@ -64,7 +64,7 @@ void Enemy::update()
 void Enemy::draw()
 {
   SDL_Rect dRect = {destRect.x, destRect.y - Game::camera.y, destRect.w, destRect.h};
-  renderer->copy(GameItem::texture->getTexture(), &srcRect, &dRect);
+  renderer->copy(Game::getTexture(), &srcRect, &dRect);
 }
 
 bool Enemy::offScreen()

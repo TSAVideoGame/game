@@ -4,6 +4,7 @@
 #include "item_manager.h"
 #include "renderer.h"
 #include "player.h"
+#include "texture.h"
 
 class BossManager : public ItemManager
 {
@@ -13,6 +14,7 @@ public:
   void update();
 private:
   Player* player;
+  Texture* texture;
 };
 
 #endif

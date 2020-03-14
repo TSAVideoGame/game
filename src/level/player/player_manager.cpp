@@ -1,6 +1,6 @@
 #include "player_manager.h"
 #include "player.h"
-#include "game_states.h"
+#include "game.h"
 
 PlayerManager::PlayerManager(Renderer* ren) : ItemManager(ren)
 {
@@ -16,10 +16,10 @@ PlayerManager::~PlayerManager()
 
 void PlayerManager::update()
 {
-  if (GameStates::getFirstTick())
+  if (Game::gameState.getFirstTick())
   {
     playerActive = false;
-    switch (GameStates::getState())
+    switch (Game::gameState.getState())
     {
       case GameState::LEVEL:
       {

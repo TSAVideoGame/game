@@ -8,7 +8,7 @@ int main(int argc, char* args[])
   Uint32 frameStart;
   int frameTime;
 
-  Game::init("TSA", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, false);
+  Game::init("The Lady and the Trampoline", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, false);
 
   while (Game::isRunning())
   {

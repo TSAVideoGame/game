@@ -17,5 +17,5 @@ void Slide::update()
 
 void Slide::draw()
 {
-  renderer->copy(texture->getTexture(), NULL, NULL);
+  renderer->copy(texture, NULL, NULL);
 }

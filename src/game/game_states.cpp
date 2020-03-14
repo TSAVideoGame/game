@@ -1,8 +1,11 @@
 #include "game_states.h"
 
-GameState GameStates::state = GameState::INTRO;
-GameState GameStates::newState = GameState::INTRO;
-bool GameStates::firstTick = true;
+GameStates::GameStates()
+{
+  state = GameState::INTRO;
+  newState = GameState::INTRO;
+  firstTick = true;
+}
 
 GameState GameStates::getState()
 {

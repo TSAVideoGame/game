@@ -10,6 +10,7 @@ Dialog::Dialog(Renderer* ren, Texture* texture, int srcX, int srcY, int destY) :
   srcRect = {srcX, srcY, dialogW, dialogH};
   destRect = {0, destY, dialogW, dialogH};
   myTexture = texture;
+  renderer->setAlpha(myTexture, 192);
 }
 
 Dialog::~Dialog()
@@ -24,5 +25,5 @@ void Dialog::update()
 
 void Dialog::draw()
 {
-  renderer->copy(myTexture->getTexture(), &srcRect, &destRect);
+  renderer->copy(myTexture, &srcRect, &destRect);
 }

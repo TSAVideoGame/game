@@ -6,6 +6,9 @@
 #include "texture.h"
 #include "manager_manager.h"
 #include "game_input.h"
+#include "mixer.h"
+
+class GameStates;
 
 struct Camera
 {
@@ -23,6 +26,7 @@ struct LevelInfo
   bool cutSceneOver;
   int time;
   bool paused;
+  bool bossDefeated;
 };
 
 class Game
@@ -38,9 +42,11 @@ public:
   static bool isRunning();
   static Texture* getTexture();
   static GameInput inputs;
-  static int selectedLevel;
   static Camera camera;
   static LevelInfo levelInfo;
+  static GameStates gameState;
+  static Mixer* mixer;
+  //consolidate these variables
   static int levelsUnlocked[6];
   static int scores[6];
   static int times[6]; // Time it takes to beat level in ticks
@@ -48,11 +54,15 @@ private:
   Game();
   ~Game();
 
+  void updateState();
+
   static bool running;
   static Window* window;
   static Renderer* renderer;
   static Texture* texture;
   static ManagerManager* manager;
 };
+
+#include "game_states.h"
 
 #endif

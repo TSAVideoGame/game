@@ -1,4 +1,5 @@
 #include "renderer.h"
+#include "texture.h"
 
 Renderer::Renderer(SDL_Window* window)
 {
@@ -34,14 +35,14 @@ void Renderer::fillRect(SDL_Rect* destRect)
   SDL_RenderFillRect(renderer, destRect);
 }
 
-void Renderer::copy(SDL_Texture* texture, SDL_Rect* srcRect, SDL_Rect* destRect)
+void Renderer::copy(Texture* texture, SDL_Rect* srcRect, SDL_Rect* destRect)
 {
-  SDL_RenderCopy(renderer, texture, srcRect, destRect);
+  SDL_RenderCopy(renderer, texture->getTexture(), srcRect, destRect);
 }
 
-void Renderer::copy(SDL_Texture* texture, SDL_Rect* srcRect, SDL_Rect* destRect, double angle)
+void Renderer::copy(Texture* texture, SDL_Rect* srcRect, SDL_Rect* destRect, double angle)
 {
-  SDL_RenderCopyEx(renderer, texture, srcRect, destRect, angle, NULL, SDL_FLIP_NONE);
+  SDL_RenderCopyEx(renderer, texture->getTexture(), srcRect, destRect, angle, NULL, SDL_FLIP_NONE);
 }
 
 SDL_Renderer* Renderer::getRenderer()
@@ -49,7 +50,7 @@ SDL_Renderer* Renderer::getRenderer()
   return renderer;
 }
 
-void Renderer::setAlpha(SDL_Texture* texture, Uint8 a)
+void Renderer::setAlpha(Texture* texture, Uint8 a)
 {
-  SDL_SetTextureAlphaMod(texture, a);
+  SDL_SetTextureAlphaMod(texture->getTexture(), a);
 }

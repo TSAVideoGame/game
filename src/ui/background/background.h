@@ -2,19 +2,22 @@
 #define BACKGROUND
 
 #include "game_item.h"
-#include <SDL2/SDL.h>
+#include "player.h"
 
 class Background : public GameItem
 {
 public:
-  Background(Renderer*, const char* imagePath, SDL_Rect destRect, int speed);
+  Background(Renderer*, const char* imagePath);
+  Background(Renderer*, const char* imagePath, int w, Player*);
   ~Background();
 
   void update();
   void draw();
   void setXY(int x, int y);
 private:
-  int speed;
+  int width;
+  Player* player;
+  int ticks;
 };
 
 #endif

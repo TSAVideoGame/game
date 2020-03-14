@@ -25,6 +25,9 @@ add_executable(tsa
   src/level/player/player.cpp
   src/level/trampoline/trampoline_manager.cpp
   src/level/trampoline/trampoline.cpp
+  src/level/tutorial/tutorial_manager.cpp
+  src/level/tutorial/tutorial.cpp
+  src/level/level_manager.cpp
 
   src/menu/menu_manager.cpp
   src/menu/level_select/level_select_manager.cpp
@@ -48,6 +51,7 @@ add_executable(tsa
   src/ui/labels/score/score.cpp
   src/ui/slide/slide_manager.cpp
   src/ui/slide/slide.cpp
+  src/ui/text/text_engine.cpp
 )
 
 target_include_directories(tsa PUBLIC
@@ -55,12 +59,14 @@ target_include_directories(tsa PUBLIC
   src/game
   src/game/manager
   src/game/object
+  src/level
   src/level/boss
   src/level/cutscene
   src/level/enemies
   src/level/particles
   src/level/player
   src/level/trampoline
+  src/level/tutorial
   src/menu
   src/menu/level_select
   src/sdl
@@ -70,7 +76,8 @@ target_include_directories(tsa PUBLIC
   src/ui/labels
   src/ui/labels/score
   src/ui/slide
+  src/ui/text
 )
 
-target_link_libraries(tsa SDL2 SDL2_image SDL2_mixer)
+target_link_libraries(tsa SDL2 SDL2_image SDL2_mixer SDL2_ttf)
 set_target_properties(tsa PROPERTIES RUNTIME_OUTPUT_DIRECTORY bin)

@@ -1,8 +1,11 @@
 #include "mixer.h"
 
+int Mixer::maxVolume = MIX_MAX_VOLUME;
+int Mixer::minVolume = 0;
+
 Mixer::Mixer()
 {
-
+  Mix_Volume(-1, maxVolume / 4);
 }
 
 Mixer::~Mixer()
@@ -29,4 +32,19 @@ void Mixer::stop()
 void Mixer::addTrack(const char* fpath)
 {
   music.push_back(Mix_LoadMUS(fpath));
+}
+
+void Mixer::playSfx(int i)
+{
+  Mix_PlayChannel(-1, sfx[i], 0);
+}
+
+void Mixer::addSfx(const char *fpath)
+{
+  sfx.push_back(Mix_LoadWAV(fpath));
+}
+
+void Mixer::setMusicVolume(int v)
+{
+  Mix_VolumeMusic(v);
 }

@@ -3,13 +3,11 @@
 #include "slide_manager.h"
 #include "menu_manager.h"
 #include "component_manager.h"
-#include "trampoline_manager.h"
-#include "player_manager.h"
-#include "enemy_manager.h"
-#include "cutscene_manager.h"
-#include "boss_manager.h"
+#include "level_manager.h"
 #include "label_manager.h"
 #include "particle_manager.h"
+#include "cutscene_manager.h"
+#include "player_manager.h"
 
 /*
  * It updates in the order here,
@@ -22,7 +20,7 @@ ManagerManager::ManagerManager(Renderer* renderer)
 
   ComponentManager* componentM = new ComponentManager(renderer);
   objects.push_back(componentM);
-  
+
   CutSceneManager* cutSceneM = new CutSceneManager(renderer);
   objects.push_back(cutSceneM);
 
@@ -35,14 +33,8 @@ ManagerManager::ManagerManager(Renderer* renderer)
   PlayerManager* playerM = new PlayerManager(renderer);
   objects.push_back(playerM);
 
-  BossManager* bossM = new BossManager(renderer, playerM->getPlayer());
-  objects.push_back(bossM);
-
-  EnemyManager* enemyM = new EnemyManager(renderer, playerM->getPlayer());
-  objects.push_back(enemyM);
-
-  TrampolineManager* trampolineM = new TrampolineManager(renderer, playerM->getPlayer());
-  objects.push_back(trampolineM);
+  LevelManager* levelM = new LevelManager(renderer, playerM);
+  objects.push_back(levelM);
 
   MenuManager* menuM = new MenuManager(renderer);
   objects.push_back(menuM);
@@ -50,7 +42,7 @@ ManagerManager::ManagerManager(Renderer* renderer)
   SlideManager* slideM = new SlideManager(renderer);
   objects.push_back(slideM);
 
-  BackgroundManager* backgroundM = new BackgroundManager(renderer);
+  BackgroundManager* backgroundM = new BackgroundManager(renderer, playerM);
   objects.push_back(backgroundM);
 }
 
@@ -62,7 +54,5 @@ ManagerManager::~ManagerManager()
 void ManagerManager::draw()
 {
   for (int i = objects.size() - 1; i >= 0; i--)
-  {
     objects[i]->draw();
-  }
 }

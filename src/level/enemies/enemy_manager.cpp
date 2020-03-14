@@ -1,6 +1,5 @@
 #include "enemy_manager.h"
 #include "enemy.h"
-#include "game_states.h"
 #include "player.h"
 #include "game.h"
 #include "constants.h"
@@ -18,12 +17,12 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::update()
 {
-  if (GameStates::getFirstTick())
+  if (Game::gameState.getFirstTick())
     removeObjects();
 
-  if (GameStates::getState() == GameState::LEVEL)
+  if (Game::gameState.getState() == GameState::LEVEL)
   {
-    if (!Game::levelInfo.cutScene && !Game::levelInfo.cutSceneOver)
+    if (!Game::levelInfo.cutScene && !Game::levelInfo.cutSceneOver && !Game::levelInfo.paused)
     {
       ticks++;
       if (ticks % 96 == 0 && Game::levelInfo.difficulty != Game::levelInfo.maxDifficulty)

@@ -17,7 +17,7 @@ Player::~Player()
 
 void Player::update()
 {
-  if (GameStates::getState() == GameState::LEVEL && !Game::levelInfo.cutScene && !Game::levelInfo.paused)
+  if (Game::gameState.getState() == GameState::LEVEL && !Game::levelInfo.cutScene && !Game::levelInfo.paused)
   {
     ticks++;
 
@@ -47,14 +47,17 @@ void Player::update()
       {
         jumping = true;
         canJump = false;
+        Game::mixer->playSfx(SFX_JUMP);
       }
       shouldJump = false;
     }
 
     // Flip
-    if (Game::inputs.special)
+    if (Game::inputs.special && canFlip && airTicks > 1 && flipTicks == 0)
     {
       flipping = true;
+      canFlip = false;
+      flipTicks = 0;
       boosting = false;
       boostTicks = 0;
     }
@@ -62,17 +65,24 @@ void Player::update()
     if (flipping == true)
     {
       flipTicks++;
-      if (flipTicks > TARGET_FPS)
+      if (flipTicks < TARGET_FPS / 2)
+        yVel -= .25;
+      if (flipTicks > TARGET_FPS - 1)
         flipping = false;
     }
     else
     {
-      flipTicks = 0;
+      if (flipTicks < TARGET_FPS && flipTicks != 0)
+        flipTicks++;
+      else
+        flipTicks = 0;
     }
 
     // Check if can boost
-    if (Game::inputs.attack && canBoost && (Game::inputs.left || Game::inputs.right))
+    if (Game::inputs.attack && canBoost && (Game::inputs.left || Game::inputs.right) && airTicks > 1)
     {
+      flipping = false;
+      flipTicks = 0;
       boosting = true;
       if (Game::inputs.left)
         boostDir = 2;
@@ -122,7 +132,7 @@ void Player::update()
       else
       {
         // Slide more if the level is ice
-        if (Game::levelInfo.level == 2)
+        if (Game::levelInfo.level == LEVEL_ICE)
           ;
         else
           xVel /= 2;
@@ -133,8 +143,7 @@ void Player::update()
       {
         yVel += 0.5;
 
-        // Slow fall in water and space
-        if ((Game::levelInfo.level == 1 || Game::levelInfo.level == 3) && yVel > 5)
+        if ((Game::levelInfo.level == LEVEL_WATER || Game::levelInfo.level == LEVEL_SPACE) && yVel > 5)
           yVel = 5;
 
         if (Game::inputs.up)
@@ -205,27 +214,35 @@ void Player::update()
     }
 
     if (destRect.y > WINDOW_HEIGHT)
-      GameStates::changeState(GameState::OVER);
+      Game::gameState.changeState(GameState::OVER);
 
     if (destRect.y < Game::levelInfo.maxHeight && canJump && !Game::levelInfo.cutSceneOver)
       Game::levelInfo.cutScene = true;
+  }
+
+  if (Game::levelInfo.cutScene)
+  {
+    yVel++;
+    destRect.y += yVel;
   }
 }
 
 void Player::draw()
 {
+  // Trail effect if boosting
   if (boosting)
   {
     for (auto pos : deltas)
     {
 
       SDL_Rect dRect = {pos.x, (pos.y + maxYVel / 5) - Game::camera.y, pos.w, pos.h};
-      renderer->setAlpha(Game::getTexture()->getTexture(), 128);
-      renderer->copy(Game::getTexture()->getTexture(), &srcRect, &dRect);
-      renderer->setAlpha(Game::getTexture()->getTexture(), 255);
+      renderer->setAlpha(Game::getTexture(), 64);
+      renderer->copy(Game::getTexture(), &srcRect, &dRect);
+      renderer->setAlpha(Game::getTexture(), 255);
     }
   }
 
+  // Get src
   if (trampTicks % (-maxYVel / 5 + 20) == 0)
     srcRect = {128, 32, 64, 64};
   else
@@ -235,12 +252,13 @@ void Player::draw()
       srcRect = {0, 32, 64, 64};
   SDL_Rect dRect = {destRect.x, (destRect.y + maxYVel / 5) - Game::camera.y, destRect.w, destRect.h};
 
-  if (flipping)
+  // Roate if flipping
+  if (flipTicks > 0)
   {
-    renderer->copy(Game::getTexture()->getTexture(), &srcRect, &dRect, 360 / TARGET_FPS * flipTicks);
+    renderer->copy(Game::getTexture(), &srcRect, &dRect, 360 / TARGET_FPS * flipTicks);
   }
   else
-    renderer->copy(Game::getTexture()->getTexture(), &srcRect, &dRect);
+    renderer->copy(Game::getTexture(), &srcRect, &dRect);
 
   // Draw health
   SDL_Rect healthBar = {16, 32, (int) ((WINDOW_WIDTH / 4) * (health / 20.0)), 16};
@@ -274,31 +292,42 @@ void Player::setPos(int x, int y)
       yVel = -yVel / 2;
     else
       yVel = 0;
+
   canJump = true;
   airTicks = 0;
+
   canBoost = true;
   boostTicks = 0;
+  boosting = false;
+
+  canFlip = true;
+  flipping = false;
 }
 
 void Player::hit(int dir, int change, EnemyTypes enemyT)
 {
+  Game::mixer->playSfx(SFX_HIT);
   switch (enemyT)
   {
     case EnemyTypes::enemy:
     {
       switch (dir)
       {
-        // Player hit top
-        case 0:
+        // Player hit top, jump
+        case DIR_UP:
           destRect.y += change - 8;
           jumping = true;
+
           boostTicks = 0;
           canBoost = true;
+
+          canFlip = true;
+
           yVel = 0;
           maxYVel = 20;
           break;
-        // Player hit bottom
-        case 1:
+        // Player hit bottom, fall
+        case DIR_DOWN:
           if (!boosting)
           {
             jumping = false;
@@ -308,7 +337,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
           }
           break;
         // Player hit left
-        case 2:
+        case DIR_LEFT:
           destRect.x -= change;
           xVel = -10;
           if (boosting)
@@ -317,6 +346,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
             boosting = false;
             jumping = true;
             canBoost = true;
+            canFlip = true;
             yVel = 0;
             maxYVel = 20;
           }
@@ -327,7 +357,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
           }
           break;
         // Player hit right
-        case 3:
+        case DIR_RIGHT:
           destRect.x += change;
           xVel = 10;
           if (boosting)
@@ -336,6 +366,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
             boosting = false;
             jumping = true;
             canBoost = true;
+            canFlip = true;
             yVel = 0;
             maxYVel = 20;
           }
@@ -353,16 +384,20 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
       switch (dir)
       {
         // Player hit top
-        case 0:
+        case DIR_UP:
           destRect.y += change - 8;
           jumping = true;
+
           boostTicks = 0;
           canBoost = true;
+
+          canFlip = true;
+
           yVel = 0;
           maxYVel = 20;
           break;
         // Player hit bottom
-        case 1:
+        case DIR_DOWN:
           if (!boosting)
           {
             jumping = false;
@@ -372,13 +407,14 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
           }
           break;
         // Player hit left
-        case 2:
+        case DIR_LEFT:
           destRect.x -= change;
           xVel = -20;
           if (boosting)
           {
             boostTicks = 0;
             boosting = false;
+            canFlip = true;
             jumping = true;
             canBoost = true;
             yVel = 0;
@@ -391,13 +427,14 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
           }
           break;
         // Player hit right
-        case 3:
+        case DIR_RIGHT:
           destRect.x += change;
           xVel = 20;
           if (boosting)
           {
             boostTicks = 0;
             boosting = false;
+            canFlip = true;
             jumping = true;
             canBoost = true;
             yVel = 0;
@@ -417,7 +454,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
       switch (dir)
       {
         // Player hit top
-        case 0:
+        case DIR_UP:
           destRect.y += change - 8;
           jumping = true;
           boostTicks = 0;
@@ -426,7 +463,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
           maxYVel = 20;
           break;
         // Player hit bottom
-        case 1:
+        case DIR_DOWN:
           if (!boosting)
           {
             jumping = false;
@@ -436,7 +473,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
           }
           break;
         // Player hit left
-        case 2:
+        case DIR_LEFT:
           destRect.x -= change;
           xVel = -10;
           if (boosting)
@@ -455,7 +492,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
           }
           break;
         // Player hit right
-        case 3:
+        case DIR_RIGHT:
           destRect.x += change;
           xVel = 10;
           if (boosting)
@@ -479,7 +516,7 @@ void Player::hit(int dir, int change, EnemyTypes enemyT)
   }
 
   if (health <= 0)
-    GameStates::changeState(GameState::OVER);
+    Game::gameState.changeState(GameState::OVER);
 }
 
 int Player::getMaxYVel()
@@ -503,6 +540,10 @@ void Player::reset()
   boosting = false;
   canBoost = true;
   boostTicks = 0;
+
+  flipping = false;
+  canFlip = true;
+  flipTicks = 0;
 
   ticks = 0;
   trampTicks = 0;

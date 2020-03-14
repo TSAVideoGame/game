@@ -20,7 +20,7 @@ GameItem::~GameItem()
 void GameItem::draw()
 {
   SDL_Rect renderRect = {destRect.x, destRect.y, destRect.w, destRect.h};
-  renderer->copy(texture->getTexture(), &srcRect, &renderRect);
+  renderer->copy(texture, &srcRect, &renderRect);
 }
 
 bool GameItem::focused()

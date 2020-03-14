@@ -1,4 +1,5 @@
 #include "window.h"
+#include <SDL2/SDL_image.h>
 
 Window::Window(const char* title, int x, int y, int width, int height, bool fullScreen)
 {
@@ -9,6 +10,10 @@ Window::Window(const char* title, int x, int y, int width, int height, bool full
 
   window = SDL_CreateWindow(title, x, y, width, height, flags);
   //SDL_SetWindowResizable(window, SDL_TRUE);
+  // Set icon
+  SDL_Surface* s = IMG_Load("res/icons/icon.png");
+  SDL_SetWindowIcon(window, s);
+  SDL_FreeSurface(s);
 }
 
 Window::~Window()

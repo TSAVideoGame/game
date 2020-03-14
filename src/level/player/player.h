@@ -34,7 +34,7 @@ private:
   bool boosting, canBoost;
   int boostTicks, boostDir;
   int health;
-  bool flipping;
+  bool flipping, canFlip;
   int flipTicks;
 };
 

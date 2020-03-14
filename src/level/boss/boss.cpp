@@ -1,42 +1,48 @@
 #include "boss.h"
-#include "game_states.h"
 #include "game.h"
 #include "constants.h"
 #include "rocket.h"
 #include <SDL2/SDL.h>
 
-Boss::Boss(Renderer* ren, Player* p) : GameItem(ren), ItemManager(ren)
+Boss::Boss(Renderer* ren, Texture* text, Player* p) : GameItem(ren), ItemManager(ren)
 {
-
+  texture = text;
   destRect = {WINDOW_WIDTH / 2 - 256, Game::camera.y - 128 * 3, 512, 256};
-  health = 10;
+  health = 20;
   player = p;
+  animationState = 0;
+  ticks = 0;
 
   switch (Game::levelInfo.level)
   {
-    case 0:
+    case LEVEL_GRASS:
     {
-      srcRect = {0, 231, 512, 256};
+      srcRect = {0, 0, 32, 16};
       break;
     }
-    case 1:
+    case LEVEL_WATER:
     {
-      srcRect = {0, 231, 512, 256};
+      srcRect = {32, 0, 32, 16};
       break;
     }
-    case 2:
+    case LEVEL_ICE:
     {
-      srcRect = {0, 231, 512, 256};
+      srcRect = {64, 0, 32, 16};
       break;
     }
-    case 3:
+    case LEVEL_SPACE:
     {
-      srcRect = {0, 231, 512, 256};
+      srcRect = {96, 0, 32, 16};
       break;
     }
-    case 4:
+    case LEVEL_VOLCANO:
     {
-      srcRect = {0, 231, 512, 256};
+      srcRect = {128, 0, 32, 16};
+      break;
+    }
+    case LEVEL_CASTLE:
+    {
+      srcRect = {0, 0, 256, 64};
       break;
     }
   }
@@ -49,12 +55,11 @@ Boss::~Boss()
 
 void Boss::update()
 {
-  if (GameStates::getState() == GameState::LEVEL)
+  if (Game::gameState.getState() == GameState::LEVEL)
   {
-    if (Game::levelInfo.cutSceneOver && !Game::levelInfo.paused)
+    ticks++;
+    if (Game::levelInfo.cutSceneOver && !Game::levelInfo.paused && !Game::levelInfo.bossDefeated)
     {
-      ticks++;
-
       // Player collides with top
       if ((player->getDelta().y + player->getDelta().h <= destRect.y && player->getPos().y + player->getPos().h >= destRect.y) &&
           ((player->getPos().x >= destRect.x && player->getPos().x <= destRect.x + destRect.w) ||
@@ -94,51 +99,55 @@ void Boss::update()
       // Unique boss behaviors based on level
       switch (Game::levelInfo.level)
       {
-        case 0:
+        case LEVEL_GRASS:
         {
-          // Movement
+          // Set Movement
           if (ticks % (TARGET_FPS * 3) == 0)
             dir = rand() % 2;
 
           // Rockets
           if (ticks % (TARGET_FPS * 4) == 0)
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w / 2, destRect.y, 1));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w / 2, destRect.y, DIR_DOWN));
 
+          // Movement
           if (dir)
             destRect.x += 4;
           else
             destRect.x -= 4;
 
+          // Offscreen
           if (destRect.x < 0 || destRect.x + destRect.w > WINDOW_WIDTH)
             dir = !dir;
 
           break;
         }
-        case 1:
+        case LEVEL_WATER:
         {
-          // Movement
+          // Set Movement
           if (ticks % (TARGET_FPS * 3) == 0)
             dir = rand() % 2;
 
           // Rockets
           if (ticks % (TARGET_FPS * 4) == 0)
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y, 1));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y, DIR_DOWN));
 
           // Rockets
           if (ticks % (TARGET_FPS * 8) == 0)
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w, destRect.y, 1));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w, destRect.y, DIR_DOWN));
 
+          // Movement
           if (dir)
             destRect.x += 4;
           else
             destRect.x -= 4;
 
+          // Offscreen
           if (destRect.x < 0 || destRect.x + destRect.w > WINDOW_WIDTH)
             dir = !dir;
 
           break;
         }
-        case 2:
+        case LEVEL_ICE:
         {
           // Movement
           if (ticks % (TARGET_FPS * 3) == 0)
@@ -146,12 +155,12 @@ void Boss::update()
 
           // Rockets
           if (ticks % TARGET_FPS * 4 == 0)
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w / 2, destRect.y, 1));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w / 2, destRect.y, DIR_DOWN));
 
           if (ticks % TARGET_FPS * 5 == 0)
           {
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w, destRect.y + destRect.h / 2, 3));
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y + destRect.h / 2, 2));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w, destRect.y + destRect.h / 2, DIR_RIGHT));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y + destRect.h / 2, DIR_LEFT));
           }
 
           if (dir)
@@ -164,7 +173,7 @@ void Boss::update()
 
           break;
         }
-        case 3:
+        case LEVEL_SPACE:
         {
           // Movement
           if (ticks % (TARGET_FPS * 3) == 0)
@@ -172,7 +181,7 @@ void Boss::update()
 
           // Rockets
           if (ticks % (TARGET_FPS * 4) < 16)
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + (ticks % (TARGET_FPS * 4)) * 32, destRect.y, 1));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + (ticks % (TARGET_FPS * 4)) * 32, destRect.y, DIR_DOWN));
 
           if (dir)
             destRect.x += 4;
@@ -184,30 +193,33 @@ void Boss::update()
 
           break;
         }
-        case 4:
+        case LEVEL_VOLCANO:
         {
-          // Movement
+          // Set movement
           if (ticks % (TARGET_FPS * 3) == 0)
             dir = rand() % 2;
 
-          // Rockets
+          // Down Rockets
           if (ticks % (TARGET_FPS * 4 )== 0)
           {
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y, 1));
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w, destRect.y, 1));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y, DIR_DOWN));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x + destRect.w, destRect.y, DIR_DOWN));
           }
 
+          // Side rockets
           if (ticks % TARGET_FPS * 5 == 0)
           {
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y + destRect.h / 2, 3));
-            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y + destRect.h / 2, 2));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y + destRect.h / 2, DIR_RIGHT));
+            objects.push_back(new Rocket(GameItem::renderer, player, destRect.x, destRect.y + destRect.h / 2, DIR_LEFT));
           }
 
+          // Movement
           if (dir)
             destRect.x += 4;
           else
             destRect.x -= 4;
 
+          // Flip direction if offscreen
           if (destRect.x < 0 || destRect.x + destRect.w > WINDOW_WIDTH)
             dir = !dir;
 
@@ -215,9 +227,14 @@ void Boss::update()
         }
       }
 
+      // If the boss is defeated change the game state to WIN
       if (health <= 0)
-        GameStates::changeState(GameState::WIN);
+      {
+        Game::levelInfo.bossDefeated = true;
+        Game::levelInfo.cutScene = true;
+      }
 
+      // Update all projectiles
       for (int i = objects.size() - 1; i >= 0; i--)
       {
         objects[i]->update();
@@ -233,8 +250,107 @@ void Boss::update()
       if (Game::levelInfo.cutScene)
       {
         dir = rand() % 2;
+        // Move to correct position if not there
         if (destRect.y != Game::camera.y + 48)
           destRect.y += ((Game::camera.y + 16) - destRect.y) / 8;
+
+        if (Game::levelInfo.bossDefeated)
+          removeObjects();
+      }
+    }
+
+    // Animations
+    switch (Game::levelInfo.level)
+    {
+      case LEVEL_GRASS:
+      {
+        if (ticks % (TARGET_FPS / 4) == 0)
+        {
+          if (animationState < 3)
+            animationState++;
+          else
+            animationState = 0;
+        }
+
+        switch (animationState)
+        {
+          case 0:
+            srcRect.y = 0;
+            break;
+          case 1:
+            srcRect.y = 16;
+            break;
+          case 2:
+            srcRect.y = 32;
+            break;
+          case 3:
+            srcRect.y = 16;
+            break;
+        }
+
+        break;
+      }
+      case LEVEL_WATER:
+      {
+        break;
+      }
+      case LEVEL_ICE:
+      {
+        if (ticks % (TARGET_FPS / 4) == 0)
+        {
+          if (animationState < 3)
+            animationState++;
+          else
+            animationState = 0;
+        }
+
+        switch (animationState)
+        {
+          case 0:
+            srcRect.y = 0;
+            break;
+          case 1:
+            srcRect.y = 16;
+            break;
+          case 2:
+            srcRect.y = 32;
+            break;
+          case 3:
+            srcRect.y = 16;
+            break;
+        }
+
+        break;
+      }
+      case LEVEL_SPACE:
+      {
+        break;
+      }
+      case LEVEL_VOLCANO:
+      {
+        if (ticks % (TARGET_FPS / 4) == 0)
+        {
+          if (animationState < 1)
+            animationState++;
+          else
+            animationState = 0;
+        }
+
+        switch (animationState)
+        {
+          case 0:
+            srcRect.y = 0;
+            break;
+          case 1:
+            srcRect.y = 16;
+            break;
+        }
+
+        break;
+      }
+      case LEVEL_CASTLE:
+      {
+        break;
       }
     }
   }
@@ -243,17 +359,20 @@ void Boss::update()
 void Boss::draw()
 {
   SDL_Rect dRect = {destRect.x, destRect.y - Game::camera.y, destRect.w, destRect.h};
-  GameItem::renderer->copy(GameItem::texture->getTexture(), &srcRect, &dRect);
+  GameItem::renderer->copy(texture, &srcRect, &dRect);
 
   // Draw health
-  SDL_Rect healthBar = {WINDOW_WIDTH - (WINDOW_WIDTH / 2) - 16, 16, (int) ((WINDOW_WIDTH / 2) * (health / 20.0)), 16};
-  if (health > 10)
-    GameItem::renderer->setDrawColor(0x3e, 0x89, 0x48, 255);
-  else if (health > 5)
-    GameItem::renderer->setDrawColor(0xfe, 0xea, 0x34, 255);
-  else
-    GameItem::renderer->setDrawColor(0xe4, 0x3b, 0x44, 255);
-  GameItem::renderer->fillRect(&healthBar);
+  if (!Game::levelInfo.bossDefeated)
+  {
+    SDL_Rect healthBar = {WINDOW_WIDTH - (WINDOW_WIDTH / 2) - 16, 16, (int) ((WINDOW_WIDTH / 2) * (health / 20.0)), 16};
+    if (health > 10)
+      GameItem::renderer->setDrawColor(0x3e, 0x89, 0x48, 255);
+    else if (health > 5)
+      GameItem::renderer->setDrawColor(0xfe, 0xea, 0x34, 255);
+    else
+      GameItem::renderer->setDrawColor(0xe4, 0x3b, 0x44, 255);
+    GameItem::renderer->fillRect(&healthBar);
+  }
 
   ItemManager::draw();
 }

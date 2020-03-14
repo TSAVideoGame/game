@@ -11,18 +11,18 @@ static int buttonH = 64;
 
 static void quit(Button* button)
 {
-  GameStates::changeState(GameState::QUIT);
+  Game::gameState.changeState(GameState::QUIT);
 }
 
 static void menu(Button* button)
 {
-  GameStates::changeState(GameState::MENU);
+  Game::gameState.changeState(GameState::MENU);
 }
 
 static void startLevel(Button* button)
 {
   if (Game::levelsUnlocked[Game::levelInfo.level])
-    GameStates::changeState(GameState::LEVEL);
+    Game::gameState.changeState(GameState::LEVEL);
 }
 
 static void pauseLevel(Button* button)
@@ -43,10 +43,10 @@ ButtonManager::~ButtonManager()
 void ButtonManager::update()
 {
   // Handle object creation and deletion
-  if (GameStates::getFirstTick())
+  if (Game::gameState.getFirstTick())
   {
     removeObjects();
-    switch (GameStates::getState())
+    switch (Game::gameState.getState())
     {
       case GameState::HOME:
       {
@@ -88,7 +88,7 @@ void ButtonManager::update()
     }
   }
 
-  if (GameStates::getState() == GameState::MENU)
+  if (Game::gameState.getState() == GameState::MENU)
   {
     for (int i = 0; i < objects.size(); i++)
     {
@@ -104,7 +104,7 @@ void ButtonManager::update()
         dynamic_cast<Button*>(objects[i])->goTo((WINDOW_WIDTH / 2 - 64) + (i * 512) - (Game::levelInfo.level * 512), WINDOW_HEIGHT + 8);
     }
   }
-  else if (GameStates::getState() == GameState::LEVEL)
+  else if (Game::gameState.getState() == GameState::LEVEL)
   {
     if (Game::levelInfo.paused)
     {

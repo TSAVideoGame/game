@@ -38,7 +38,7 @@ void LevelTile::draw()
   SDL_Rect renderRect = {destRect.x, destRect.y, destRect.w, destRect.h};
   if (isSelected)
     renderRect = {destRect.x - 16, destRect.y - 16, destRect.w + 32, destRect.h + 32};
-  renderer->copy(texture->getTexture(), NULL, &renderRect);
+  renderer->copy(texture, NULL, &renderRect);
 }
 
 void LevelTile::setXY(int x, int y)

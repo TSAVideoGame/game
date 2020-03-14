@@ -22,10 +22,10 @@ SlideManager::~SlideManager()
 
 void SlideManager::update()
 {
-  if (GameStates::getFirstTick())
+  if (Game::gameState.getFirstTick())
   {
     removeObjects();
-    if (GameStates::getState() == GameState::INTRO)
+    if (Game::gameState.getState() == GameState::INTRO)
     {
       objects.push_back(new Slide(renderer, ""));
       /*objects.push_back(new Slide(renderer, "res/images/intro/whale_1.jpg"));
@@ -36,11 +36,11 @@ void SlideManager::update()
     }
   }
 
-  if (GameStates::getState() == GameState::INTRO)
+  if (Game::gameState.getState() == GameState::INTRO)
   {
     if (Game::inputs.special)
     {
-      GameStates::changeState(GameState::HOME);
+      Game::gameState.changeState(GameState::HOME);
     }
     if (fadeIn)
     {
@@ -60,7 +60,7 @@ void SlideManager::update()
       else
       {
         if (currentSlide == objects.size() - 1)
-          GameStates::changeState(GameState::HOME);
+          Game::gameState.changeState(GameState::HOME);
         else
         {
           currentSlide++;
@@ -75,7 +75,7 @@ void SlideManager::update()
 
 void SlideManager::draw()
 {
-  if (GameStates::getState() == GameState::INTRO)
+  if (Game::gameState.getState() == GameState::INTRO)
   {
     objects[currentSlide]->draw();
 

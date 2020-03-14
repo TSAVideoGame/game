@@ -16,25 +16,25 @@ ParticleManager::~ParticleManager()
 
 void ParticleManager::update()
 {
-  if (GameStates::getFirstTick())
+  if (Game::gameState.getFirstTick())
   {
     removeObjects();
   }
 
-  if (GameStates::getState() == GameState::LEVEL)
+  if (Game::gameState.getState() == GameState::LEVEL && !Game::levelInfo.paused)
   {
     ticks++;
     switch (Game::levelInfo.level)
     {
-      case 0:
+      case LEVEL_GRASS:
         break;
-      case 1: // Water
+      case LEVEL_WATER:
       {
         if (ticks % (TARGET_FPS * 2) == 0)
           objects.push_back(new Particle(renderer, std::rand() % (WINDOW_WIDTH - 16), WINDOW_HEIGHT));
         break;
       }
-      case 2: // Ice
+      case LEVEL_ICE:
         if (ticks % 4 == 0)
         {
           if (std::rand() % 2 == 0)
@@ -43,9 +43,9 @@ void ParticleManager::update()
             objects.push_back(new Particle(renderer, WINDOW_WIDTH - std::rand() % WINDOW_HEIGHT, 0));
         }
         break;
-      case 3:
+      case LEVEL_SPACE:
         break;
-      case 4:
+      case LEVEL_VOLCANO:
         break;
     }
   }

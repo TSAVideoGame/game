@@ -65,10 +65,10 @@ LevelSelectManager::~LevelSelectManager()
 
 void LevelSelectManager::update()
 {
-  if (GameStates::getFirstTick())
+  if (Game::gameState.getFirstTick())
   {
     removeObjects();
-    switch (GameStates::getState())
+    switch (Game::gameState.getState())
     {
       case GameState::MENU:
       {
@@ -90,7 +90,7 @@ void LevelSelectManager::update()
     }
   }
 
-  switch (GameStates::getState())
+  switch (Game::gameState.getState())
   {
     case GameState::MENU:
     {

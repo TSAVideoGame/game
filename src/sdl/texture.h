@@ -1,8 +1,9 @@
 #ifndef TEXTURE
 #define TEXTURE
 
-#include "renderer.h"
 #include <SDL2/SDL.h>
+
+class Renderer;
 
 class Texture
 {

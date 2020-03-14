@@ -15,19 +15,19 @@ Rocket::Rocket(Renderer* ren, Player* p, int x, int y, int dir) : GameItem(ren)
   direction = dir;
   switch (direction)
   {
-    case 0:
+    case DIR_UP:
       srcRect = {224, 32, 32, 64};
       destRect = {x, y, 32, 64};
       break;
-    case 1:
+    case DIR_DOWN:
       srcRect = {192, 32, 32, 64};
       destRect = {x, y, 32, 64};
       break;
-    case 2:
+    case DIR_LEFT:
       srcRect = {192, 0, 64, 32};
       destRect = {x, y, 64, 32};
       break;
-    case 3:
+    case DIR_RIGHT:
       srcRect = {256, 0, 64, 32};
       destRect = {x, y, 64, 32};
       break;
@@ -66,19 +66,19 @@ void Rocket::update()
     player->hit(3, (destRect.x + destRect.w) - player->getPos().x, EnemyTypes::boss);
 
   switch (direction) {
-    case 0:
+    case DIR_UP:
       if (-yVel < maxVel)
         yVel--;
       break;
-    case 1:
+    case DIR_DOWN:
       if (yVel < maxVel)
         yVel++;
       break;
-    case 2:
+    case DIR_LEFT:
       if (-xVel < maxVel)
         xVel--;
       break;
-    case 3:
+    case DIR_RIGHT:
       if (xVel < maxVel)
         xVel++;
       break;
@@ -90,20 +90,20 @@ void Rocket::update()
 void Rocket::draw()
 {
   SDL_Rect dRect = {destRect.x, destRect.y - Game::camera.y, destRect.w, destRect.h};
-  renderer->copy(GameItem::texture->getTexture(), &srcRect, &dRect);
+  renderer->copy(Game::getTexture(), &srcRect, &dRect);
 }
 
 bool Rocket::isOffScreen()
 {
   switch (direction)
   {
-    case 0: // Up
+    case DIR_UP:
       return destRect.y < Game::camera.y;
-    case 1: // Down
-      return destRect.y + destRect.h > Game::camera.y + WINDOW_HEIGHT;
-    case 2: // Left
+    case DIR_DOWN:
+      return destRect.y + destRect.h > Game::camera.y + WINDOW_HEIGHT + destRect.h;
+    case DIR_LEFT:
       return destRect.x < 0;
-    case 3: // Right
+    case DIR_RIGHT:
       return destRect.x + destRect.w > WINDOW_WIDTH;
   }
   return true; // Shouldn't reach here, object should be deleted
