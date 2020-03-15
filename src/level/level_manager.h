@@ -14,6 +14,7 @@ public:
    void draw();
  private:
    PlayerManager* playerM;
+   int ticks;
 };
 
 #endif

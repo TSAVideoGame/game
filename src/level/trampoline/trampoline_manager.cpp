@@ -33,6 +33,7 @@ void TrampolineManager::update()
         ticks = 0;
         maxReached = false;
         lastTrampY = 0;
+        maxTramps = 5;
         if (Game::levelInfo.level == LEVEL_GRASS)
         {
           objects.push_back(new Trampoline(renderer, player, 0, WINDOW_HEIGHT - 48, WINDOW_WIDTH));
@@ -53,14 +54,6 @@ void TrampolineManager::update()
 
   if (Game::gameState.getState() == GameState::LEVEL && !Game::levelInfo.paused)
   {
-    // Increase Time
-    if (!Game::levelInfo.cutScene)
-    {
-      ticks++;
-      if (ticks % TARGET_FPS == 0 && Game::levelInfo.time < 999)
-        Game::levelInfo.time++;
-    }
-
     // Increase difficulty
     if (-Game::levelInfo.maxHeight / 2000 > Game::levelInfo.difficulty)
       Game::levelInfo.difficulty = -Game::levelInfo.maxHeight / 2000;
@@ -75,7 +68,10 @@ void TrampolineManager::update()
           objects.pop_front();
         if (lastTrampY - Game::levelInfo.maxHeight > 256 * Game::levelInfo.difficulty)
         {
-          objects.push_back(new Trampoline(renderer, player, std::rand() % WINDOW_WIDTH - (WINDOW_WIDTH / (8 * Game::levelInfo.difficulty)), Game::camera.y, std::rand() % 512 + 128));
+          int x = std::rand() % WINDOW_WIDTH - (WINDOW_WIDTH / (8 * Game::levelInfo.difficulty));
+          int y = Game::camera.y;
+          int w = (-10 * Game::levelInfo.difficulty + 128) + (std::rand() % (-50 * Game::levelInfo.difficulty + 512)); // The random range is x + rand() % y
+          objects.push_back(new Trampoline(renderer, player, x, y, w));
           lastTrampY = Game::camera.y;
         }
       }

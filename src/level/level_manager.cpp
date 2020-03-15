@@ -7,6 +7,7 @@
 #include "player_manager.h"
 #include "trampoline_manager.h"
 #include "tutorial_manager.h"
+#include "constants.h"
 
 static void resetLevel()
 {
@@ -22,6 +23,7 @@ static void resetLevel()
 LevelManager::LevelManager(Renderer* ren, PlayerManager* pM) : ItemManager(ren)
 {
   playerM = pM;
+  ticks = 0;
 }
 
 LevelManager::~LevelManager()
@@ -53,6 +55,17 @@ void LevelManager::update()
         objects.push_back(tutorialM);
       }
       break;
+    }
+  }
+
+  if (Game::gameState.getState() == GameState::LEVEL && !Game::levelInfo.paused)
+  {
+    // Increase Time
+    if (!Game::levelInfo.cutScene)
+    {
+      ticks++;
+      if (ticks % TARGET_FPS == 0 && Game::levelInfo.time < 999)
+        Game::levelInfo.time++;
     }
   }
 

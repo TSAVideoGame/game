@@ -12,7 +12,7 @@ ManagerManager* Game::manager;
 Camera Game::camera = {0, 0};
 GameStates Game::gameState = GameStates();
 Mixer* Game::mixer;
-LevelInfo Game::levelInfo = {0, 0, 0, 2, false, false, false, false};
+LevelInfo Game::levelInfo = {0, 0, 0, 5, false, false, false, false};
 int Game::levelsUnlocked[6] = {1, 0, 0, 0, 0, 0};
 int Game::scores[6] = {0, 0, 0, 0, 0, 0};
 int Game::times[6] = {999, 999, 999, 999, 999, 999};
